@@ -1,5 +1,5 @@
 MAP
-  NAME "WMS Map"
+  NAME "Test Map"
   SIZE 600 600
   EXTENT -180 -90 180 90
   IMAGECOLOR 180 180 250
@@ -39,9 +39,9 @@ MAP
   LAYER
     NAME shppoly
     TYPE line
-    DATA "data/shppoly/poly.shp"
-    STATUS OFF
-    CLASSITEM "AREA"
+    DATA "data/world_testpoly.shp"
+    STATUS ON
+    CLASSITEM "FID"
     CLASS
       NAME "test1"
       STYLE

@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Pirmin Kalberer"]
   s.email       = ["pka@sourcepole.ch"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{Ruby Mapscript API extensions}
+  s.description = %q{Ruby Mapscript API extensions}
 
   s.rubyforge_project = "ruby_mapscript"
 

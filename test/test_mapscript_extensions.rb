@@ -63,6 +63,6 @@ class TestMapscriptExtension < Test::Unit::TestCase
 
   def test_draw
     mapimage = @map.draw
-    assert_equal 2338, mapimage.getSize
+    assert_equal 3270, mapimage.getSize
   end
 end
