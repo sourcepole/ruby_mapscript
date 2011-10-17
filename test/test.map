@@ -1,0 +1,62 @@
+MAP
+  NAME "WMS Map"
+  SIZE 600 600
+  EXTENT -180 -90 180 90
+  IMAGECOLOR 180 180 250
+  IMAGETYPE PNG
+
+  #CONFIG "MS_ERRORFILE" "stderr" # http://mapserver.org/optimization/debugging.html#step-1-set-the-ms-errorfile-variable
+  #DEBUG 5 # http://mapserver.org/optimization/debugging.html#step-2-set-the-debug-level
+  #CONFIG "CPL_DEBUG" "ON" # http://mapserver.org/optimization/debugging.html#step-3-turn-on-cpl-debug-optional
+  #CONFIG "PROJ_DEBUG" "ON" # http://mapserver.org/optimization/debugging.html#step-4-turn-on-proj-debug-optional
+
+  UNITS DD
+  PROJECTION
+    "init=epsg:4326"
+  END
+
+  WEB
+    IMAGEPATH "/tmp/"
+    IMAGEURL "/tmp/"
+  END
+
+  LAYER
+    NAME "wms_layer"
+    TYPE RASTER
+    STATUS OFF
+    CONNECTIONTYPE WMS
+    CONNECTION "http://iceds.ge.ucl.ac.uk/cgi-bin/icedswms?"
+    METADATA
+      "wms_title" "WMS Layer"
+      "wms_extent" "-180 -90 180 90"
+      "wms_srs" "EPSG:4326"
+      "wms_name" "landsat5,landsat,GRID"
+      "wms_server_version" "1.1.1"
+      "wms_format" "image/jpeg"
+    END
+  END
+
+  LAYER
+    NAME shppoly
+    TYPE line
+    DATA "data/shppoly/poly.shp"
+    STATUS OFF
+    CLASSITEM "AREA"
+    CLASS
+      NAME "test1"
+      STYLE
+          COLOR 20 20 20
+          WIDTH 5
+      END
+      STYLE
+          COLOR 50 50 255
+          WIDTH 3
+      END
+      STYLE
+          COLOR 255 255 0
+          WIDTH 1
+          PATTERN 4 4 END
+      END
+    END
+  END
+END

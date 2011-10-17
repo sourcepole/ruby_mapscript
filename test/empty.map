@@ -1,0 +1,17 @@
+MAP
+  NAME "Empty Map"
+  SIZE 600 600
+  EXTENT -180 -90 180 90
+  IMAGECOLOR 180 180 250
+  IMAGETYPE PNG
+
+  UNITS DD
+  PROJECTION
+    "init=epsg:4326"
+  END
+
+  WEB
+    IMAGEPATH "/tmp/"
+    IMAGEURL "/tmp/"
+  END
+END
