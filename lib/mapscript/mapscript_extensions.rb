@@ -4,17 +4,35 @@ require "mapscript"
 
 module Mapscript
 
-  class MapLayers
+  class MapscriptEnumerable
     include Enumerable
- 
-    def initialize(map)
-      @map = map
+
+    def initialize(parent, size_method, getter)
+      @parent, @size_method, @getter  = parent, size_method, getter
     end
- 
+
     def each
-      0.upto(@map.numlayers-1) do |idx|
-        yield @map.getLayer(idx)
-      end if @map.numlayers > 0
+      size = @parent.send(@size_method)
+      0.upto(size-1) do |idx|
+        yield @parent.send(@getter, idx)
+      end if size > 0
+    end
+
+    def to_a
+      size = @parent.send(@size_method)
+      if size > 0
+        (0..size-1).collect { |idx| @parent.send(@getter, idx) }
+      else
+        []
+      end
+    end
+  end
+
+  class MapLayers < MapscriptEnumerable
+
+    def initialize(map)
+      super(map, :numlayers, :getLayer)
+      @map = map
     end
 
     def [](idx)
@@ -30,36 +48,22 @@ module Mapscript
         when String
           @map.getLayerByName(idx)
         else
-          nil
+          raise TypeError, "Unsupported type for index"
       end
     end
 
     def <<(layer)
       @map.insertLayer(layer, @map.numlayers-1)
     end
-
-    def to_a
-      if @map.numlayers > 0
-        (0..@map.numlayers-1).collect { |idx| @map.getLayer(idx) }
-      else
-        []
-      end
-    end
   end
 
-  class LayerClasses
-    include Enumerable
- 
+  class LayerClasses < MapscriptEnumerable
+
     def initialize(layer)
+      super(layer, :numclasses, :getClass)
       @layer = layer
     end
  
-    def each
-      0.upto(@layer.numclasses-1) do |idx|
-        yield @layer.getClass(idx)
-      end if @layer.numclasses > 0
-    end
-
     def [](idx)
       case idx
         when Fixnum
@@ -73,22 +77,15 @@ module Mapscript
         when String
           find { |cls| cls.name == idx }
         else
-          nil
+          raise TypeError, "Unsupported type for index"
       end
     end
 
     def <<(newclass)
       @layer.insertClass(newclass, @layer.numclasses-1)
     end
-
-    def to_a
-      if @layer.numclasses > 0
-        (0..@layer.numclasses-1).collect { |idx| @layer.getClass(idx) }
-      else
-        []
-      end
-    end
   end
+
 
   # MapObj extensions
   class MapObj
@@ -106,7 +103,7 @@ module Mapscript
 
     # Return string array
     def processings
-      (0..[-1,numprocessing-1].max).collect { |idx| getProcessing(idx) }
+      @processings ||= MapscriptEnumerable.new(self, :numprocessing, :getProcessing)
     end
   end
 
@@ -114,10 +111,11 @@ module Mapscript
   class ClassObj
     # Return StyleObj array
     def styles
-      (0..[-1,numstyles-1].max).collect { |idx| getStyle(idx) }
+      @styles ||= MapscriptEnumerable.new(self, :numstyles, :getStyle)
     end
   end
 
+  # HashTableObj extensions
   class HashTableObj
     include Enumerable
 
