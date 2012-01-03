@@ -118,4 +118,66 @@ module Mapscript
     end
   end
 
+  class HashTableObj
+    include Enumerable
+
+    def [](key)
+      get(key)
+    end
+
+    def []=(key, value)
+      set(key, value)
+    end
+
+    def each_key
+      key = nextKey(nil)
+      while key
+        yield key
+        key = nextKey(key)
+      end
+    end
+
+    def has_key?(key)
+      !get(key).nil?
+    end
+
+    alias :key? :has_key?
+    alias :include? :has_key?
+
+    def keys
+      ary = []
+      each_key { |key| ary << key }
+      ary
+    end
+
+    alias :length :numitems
+    alias :size :numitems
+
+    def empty?
+      numitems == 0
+    end
+
+    alias :delete :remove
+
+    def each_pair
+      key = nextKey(nil)
+      while key
+        yield key, get(key)
+        key = nextKey(key)
+      end
+    end
+
+    alias :each :each_pair
+
+    def to_hash
+      h = {}
+      each_pair { |key, value| h[key] = value }
+      h
+    end
+
+    def inspect
+      to_hash.inspect
+    end
+
+  end
 end
