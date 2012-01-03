@@ -111,6 +111,28 @@ class TestMapscriptExtension < Test::Unit::TestCase
     assert_equal layer.numclasses, layer.classes[0..-1].size
   end
 
+  def test_iterators
+    assert_equal 0, LabelObj.new.styles.size
+
+    assert_equal 0, ResultCacheObj.new.results.size
+
+    shapefile = File.dirname(__FILE__) + '/data/world_testpoly.shp'
+    shapefile_obj = ShapefileObj.new(shapefile)
+    assert_equal 4, shapefile_obj.shapes.size
+    shape = shapefile_obj.shapes[0]
+    assert_equal 0, shape.index
+    assert_equal 1, shape.lines.size
+    lines = shape.lines[0]
+    assert_equal 0, shape.values.size
+    assert_equal 5, lines.points.size
+    point = lines.points[0]
+    assert_not_nil point
+
+    symbol_set = SymbolSetObj.new
+    assert_equal 1, symbol_set.symbols.size
+    assert_not_nil symbol_set.symbols[0]
+  end
+
   def test_empty_map
     mapfile = File.dirname(__FILE__) + '/empty.map'
     @map = MapObj.new(mapfile)

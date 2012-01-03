@@ -4,6 +4,7 @@ require "mapscript"
 
 module Mapscript
 
+  # Generic iterator for Mapscript collections
   class MapscriptEnumerable
     include Enumerable
 
@@ -41,6 +42,7 @@ module Mapscript
     end
   end
 
+  # LayerObj iterator
   class MapLayers < MapscriptEnumerable
 
     def initialize(map)
@@ -70,6 +72,7 @@ module Mapscript
     end
   end
 
+  # ClassObj iterator
   class LayerClasses < MapscriptEnumerable
 
     def initialize(layer)
@@ -100,29 +103,9 @@ module Mapscript
   end
 
 
-  # MapObj extensions
-  class MapObj
-    # Return LayerObj array
-    def layers
-      @map_layers ||= MapLayers.new(self)
-    end
-  end
-
-  # LayerObj extensions
-  class LayerObj
-    def classes
-      @classes ||= LayerClasses.new(self)
-    end
-
-    # Return string array
-    def processings
-      @processings ||= MapscriptEnumerable.new(self, :numprocessing, :getProcessing)
-    end
-  end
-
   # ClassObj extensions
   class ClassObj
-    # Return StyleObj array
+    # Return StyleObj iterator
     def styles
       @styles ||= MapscriptEnumerable.new(self, :numstyles, :getStyle)
     end
@@ -190,5 +173,79 @@ module Mapscript
       to_hash.inspect
     end
 
+  end
+
+  # LabelObj extensions
+  class LabelObj
+    # Return styleObj iterator
+    def styles
+      @styles ||= MapscriptEnumerable.new(self, :numstyles, :getStyle)
+    end
+  end
+
+  # LayerObj extensions
+  class LayerObj
+    # Return ClassObj iterator
+    def classes
+      @classes ||= LayerClasses.new(self)
+    end
+
+    # Return string iterator
+    def processings
+      @processings ||= MapscriptEnumerable.new(self, :numprocessing, :getProcessing)
+    end
+  end
+
+  # LineObj extensions
+  class LineObj
+    # Return pointObj iterator
+    def points
+      @points ||= MapscriptEnumerable.new(self, :numpoints, :get)
+    end
+  end
+
+  # MapObj extensions
+  class MapObj
+    # Return LayerObj iterator
+    def layers
+      @map_layers ||= MapLayers.new(self)
+    end
+  end
+
+  # ResultCacheObj extensions
+  class ResultCacheObj
+    # Return resultCacheObj iterator
+    def results
+      @results ||= MapscriptEnumerable.new(self, :numresults, :getResult)
+    end
+  end
+
+  # ShapefileObj extensions
+  class ShapefileObj
+    # Return shapeObj iterator
+    def shapes
+      @shapes ||= MapscriptEnumerable.new(self, :numshapes, :getShape)
+    end
+  end
+
+  # ShapeObj extensions
+  class ShapeObj
+    # Return lineObj iterator
+    def lines
+      @lines ||= MapscriptEnumerable.new(self, :numlines, :get)
+    end
+
+    # Return shape attribute (string) iterator
+    def values
+      @values ||= MapscriptEnumerable.new(self, :numvalues, :getValue)
+    end
+  end
+
+  # SymbolSetObj extensions
+  class SymbolSetObj
+    # Return symbolObj iterator
+    def symbols
+      @symbols ||= MapscriptEnumerable.new(self, :numsymbols, :getSymbol) #:getSymbolByName
+    end
   end
 end
