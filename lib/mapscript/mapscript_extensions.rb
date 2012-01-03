@@ -11,20 +11,33 @@ module Mapscript
       @parent, @size_method, @getter  = parent, size_method, getter
     end
 
+    def size
+      @parent.send(@size_method)
+    end
+
     def each
-      size = @parent.send(@size_method)
       0.upto(size-1) do |idx|
         yield @parent.send(@getter, idx)
       end if size > 0
     end
 
-    def to_a
-      size = @parent.send(@size_method)
-      if size > 0
-        (0..size-1).collect { |idx| @parent.send(@getter, idx) }
-      else
-        []
+    def [](idx)
+      case idx
+        when Fixnum
+          if idx >= 0
+            @parent.send(@getter, idx)
+          else
+            @parent.send(@getter, size+idx)
+          end
+        when Range
+          to_a[idx]
+        else
+          raise TypeError, "Unsupported type for index"
       end
+    end
+
+    def to_a
+      (0..size-1).collect { |idx| @parent.send(@getter, idx) }
     end
   end
 

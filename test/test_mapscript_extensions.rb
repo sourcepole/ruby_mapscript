@@ -10,7 +10,7 @@ class TestMapscriptExtension < Test::Unit::TestCase
 
   def test_arrays
     assert_equal 0, @map.getLayersDrawingOrder[0]
-    style = @map.layers['shppoly'].classes.first.styles.to_a.last
+    style = @map.layers['shppoly'].classes.first.styles[-1]
     assert_equal SWIG::TYPE_p_double, style.pattern.class
     if defined?(Doublearray)
       pattern = Doublearray.frompointer(style.pattern)
@@ -75,6 +75,8 @@ class TestMapscriptExtension < Test::Unit::TestCase
   end
 
   def test_layer_access
+    assert_equal @map.numlayers, @map.layers.size
+    assert_equal @map.numlayers, @map.layers.count #From Enumerable
     assert_equal @map.numlayers, @map.layers.to_a.size
     assert_equal @map.numlayers, @map.layers[0..-1].size
     assert_equal 0, @map.layers.first.index
@@ -114,6 +116,7 @@ class TestMapscriptExtension < Test::Unit::TestCase
     @map = MapObj.new(mapfile)
     assert_equal 0, @map.layers.to_a.size
     assert_nil @map.layers[0]
+    assert_nil @map.layers[-1]
     assert_nil @map.layers['wms_layer']
     @map.layers.each { }
   end
