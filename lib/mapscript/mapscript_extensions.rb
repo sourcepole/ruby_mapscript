@@ -19,7 +19,7 @@ module Mapscript
     def each
       0.upto(size-1) do |idx|
         yield @parent.send(@getter, idx)
-      end if size > 0
+      end
     end
 
     def [](idx)
@@ -37,9 +37,6 @@ module Mapscript
       end
     end
 
-    def to_a
-      (0..size-1).collect { |idx| @parent.send(@getter, idx) }
-    end
   end
 
   # LayerObj iterator

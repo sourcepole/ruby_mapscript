@@ -77,7 +77,7 @@ class TestMapscriptExtension < Test::Unit::TestCase
   def test_layer_access
     assert_equal @map.numlayers, @map.layers.size
     assert_equal @map.numlayers, @map.layers.count #From Enumerable
-    assert_equal @map.numlayers, @map.layers.to_a.size
+    assert_equal @map.numlayers, @map.layers.to_a.size #to_a from Enumerable
     assert_equal @map.numlayers, @map.layers[0..-1].size
     assert_equal 0, @map.layers.first.index
     @map.layers.each_with_index do |l, i|
