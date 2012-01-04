@@ -191,6 +191,10 @@ module Mapscript
     def processings
       @processings ||= MapscriptEnumerable.new(self, :numprocessing, :getProcessing)
     end
+
+    def visible?
+      isVisible == MS_TRUE
+    end
   end
 
   # LineObj extensions

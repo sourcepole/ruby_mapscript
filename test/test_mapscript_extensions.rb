@@ -93,6 +93,8 @@ class TestMapscriptExtension < Test::Unit::TestCase
     assert_equal oldcnt+1, @map.numlayers
     assert_equal @map.numlayers, @map.layers.to_a.size
     assert_equal @map.numlayers, @map.layers[0..-1].size
+
+    assert !@map.layers.first.visible?
   end
 
   def test_class_access
@@ -147,4 +149,18 @@ class TestMapscriptExtension < Test::Unit::TestCase
     mapimage = @map.draw
     assert mapimage.getSize >= 2338
   end
+
+  def test_examples
+    map = @map
+    map.layers.each do |layer|
+      #puts layer.name
+    end
+    0.upto(map.numlayers-1) do |i|
+      layer = map.getLayer(i)
+      #puts layer.name
+    end
+    wms_layers = map.layers.select { |layer| layer.connectiontype == MS_WMS }
+    assert_equal 1, wms_layers.size
+  end
+
 end
