@@ -18,7 +18,14 @@ MAP
   WEB
     IMAGEPATH "/tmp/"
     IMAGEURL "/tmp/"
-  END
+    METADATA
+      "wms_srs" "EPSG:4326"
+      "wms_onlineresource"      "http://localhost:9292/"
+      "ows_enable_request"      "*"
+      "wms_feature_info_mime_type"      "text/html"
+      "wms_title"       "Rackup Test WMS"
+    END # METADATA
+  END # WEB
 
   LAYER
     NAME "wms_layer"

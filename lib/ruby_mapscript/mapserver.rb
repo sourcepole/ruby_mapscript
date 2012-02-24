@@ -1,4 +1,4 @@
-# OGC compliant map server Rack Middleware
+# OGC compliant map server Rack Application
 # OWS requests include WMS, WFS, WCS and SOS requests supported by MapServer
 
 require "mapscript"
@@ -6,7 +6,8 @@ require "mapscript"
 module RubyMapscript
 
 class Mapserver
-  def initialize(app, mapfile)
+
+  def initialize(mapfile)
     @wms = Mapscript::MapObj.new(mapfile)
   end
 

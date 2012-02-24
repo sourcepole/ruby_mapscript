@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = RubyMapscript::VERSION
   s.authors     = ["Pirmin Kalberer"]
   s.email       = ["pka@sourcepole.ch"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/sourcepole/ruby_mapscript"
   s.summary     = %q{Ruby Mapscript API extensions}
   s.description = %q{Ruby Mapscript API extensions}
 

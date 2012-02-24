@@ -4,7 +4,7 @@ include Mapscript
 
 class TestMapscriptExtension < Test::Unit::TestCase
   def setup
-    mapfile = File.dirname(__FILE__) + '/test.map'
+    mapfile = File.join(File.dirname(__FILE__), 'test.map')
     @map = MapObj.new(mapfile)
   end
 
@@ -118,7 +118,7 @@ class TestMapscriptExtension < Test::Unit::TestCase
 
     assert_equal 0, ResultCacheObj.new.results.size
 
-    shapefile = File.dirname(__FILE__) + '/data/world_testpoly.shp'
+    shapefile = File.join(File.dirname(__FILE__), 'data', 'world_testpoly.shp')
     shapefile_obj = ShapefileObj.new(shapefile)
     assert_equal 4, shapefile_obj.shapes.size
     shape = shapefile_obj.shapes[0]
@@ -136,7 +136,7 @@ class TestMapscriptExtension < Test::Unit::TestCase
   end
 
   def test_empty_map
-    mapfile = File.dirname(__FILE__) + '/empty.map'
+    mapfile = File.join(File.dirname(__FILE__), 'empty.map')
     @map = MapObj.new(mapfile)
     assert_equal 0, @map.layers.to_a.size
     assert_nil @map.layers[0]
