@@ -58,8 +58,13 @@ class TestMapscriptExtension < Test::Unit::TestCase
     assert_equal metadata.keys, metadata.collect { |k, v| k }
     assert_equal ["wms_srs", "EPSG:4326"], metadata.to_a.first
 
-    #Test Empty Hash
+    #Test Map Metadata
     metadata = @map.web.metadata
+    assert_equal 5, metadata.numitems
+    assert_equal "Rackup Test WMS", metadata["wms_title"]
+
+    #Test Empty Hash
+    metadata = @map.layers['shppoly'].metadata
     assert !metadata.key?("wms_title")
     assert_equal 0, metadata.numitems
     assert_equal metadata.numitems, metadata.length
@@ -150,15 +155,72 @@ class TestMapscriptExtension < Test::Unit::TestCase
     assert mapimage.getSize >= 2338
   end
 
+  def test_map_io
+    #MapObj -> String
+    mapstr = @map.to_s
+    assert mapstr =~ /NAME "Test Map"/
+    assert mapstr =~ %r(CONNECTION "http://iceds.ge.ucl.ac.uk/cgi-bin/icedswms\?")
+    assert mapstr =~ %r(DATA "data/world_testpoly.shp")
+
+    #String -> MapObj
+    map = MapObj.from_s(mapstr)
+    assert_equal @map.name, map.name
+    assert_equal @map.layers.size, map.layers.size
+    assert_equal @map.layers.first.name, map.layers.first.name
+    assert_equal @map.layers[-1].name, map.layers[-1].name
+
+    #String -> LayerObj
+    layerstr =<<EOS
+      LAYER
+        NAME redline
+        TYPE line
+        DATA "data/world_testpoly.shp"
+        STATUS ON
+        CLASS
+          STYLE
+              COLOR 255 0 0
+              WIDTH 5
+          END
+        END
+      END
+EOS
+    layer = LayerObj.from_map(layerstr)
+    assert_equal "redline", layer.name
+    @map.insertLayer(layer)
+    assert_equal layer.name, @map.layers[-1].name
+
+    #String -> OutputFormatObj
+    formaststr =<<EOS
+      OUTPUTFORMAT
+        NAME "png8"
+        DRIVER AGG/PNG8
+        MIMETYPE "image/png; mode=8bit"
+        IMAGEMODE RGB
+        EXTENSION "png"
+        FORMATOPTION "QUANTIZE_FORCE=on"
+        FORMATOPTION "QUANTIZE_COLORS=256"
+        FORMATOPTION "GAMMA=0.75"
+      END
+EOS
+    output_format = OutputFormatObj.from_map(formaststr)
+    assert_equal "png8", output_format.name
+    assert_equal '256', output_format.getOption('QUANTIZE_COLORS')
+  end
+
   def test_examples
     map = @map
     map.layers.each do |layer|
       #puts layer.name
     end
+    mapimage = map.draw
+    #mapimage.save('/tmp/test.png')
+    assert mapimage.getSize >= 2338
+
     0.upto(map.numlayers-1) do |i|
       layer = map.getLayer(i)
       #puts layer.name
     end
+
     wms_layers = map.layers.select { |layer| layer.connectiontype == MS_WMS }
     assert_equal 1, wms_layers.size
   end

@@ -30,18 +30,21 @@ To use ruby_mapscript, require the gem and include Mapscript in your class/modul
 
 ruby_mapscript provides a Ruby-like iterator interface to MapScript collections::
 
+  map = MapObj.new('test.map')
   map.layers.each do |layer|
     puts layer.name
   end
+  mapimage = map.draw
+  mapimage.save('test.png')
 
-With the native SWIG API this would be something like::
+With the generic SWIG API iterating would look like::
 
   0.upto(map.numlayers-1) do |i|
     layer = map.getLayer(i)
     puts layer.name
   end
 
-ruby_mapscript iterators include Enumerable which gives you the same methods as Ruby Arrays and Hashes have::
+ruby_mapscript iterators include Enumerable which gives you the same methods as Ruby Arrays and Hashes::
 
   wms_layers = map.layers.select { |layer| layer.connectiontype == MS_WMS }
 

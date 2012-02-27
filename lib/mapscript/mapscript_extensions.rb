@@ -1,6 +1,7 @@
 # Ruby Mapscript API extensions
 
 require "mapscript"
+require 'tempfile'
 
 module Mapscript
 
@@ -182,6 +183,21 @@ module Mapscript
 
   # LayerObj extensions
   class LayerObj
+    #Create LayerObj from Mapfile fragment
+    def self.from_map(mapfragment)
+      mapfile =<<EOS
+MAP
+  #{mapfragment}
+END
+EOS
+      map = MapObj.from_s(mapfile)
+      layer = map.getLayer(0)
+      if layer.nil?
+        nil
+      else
+        layer.clone()
+      end
+    end
     # Return ClassObj iterator
     def classes
       @classes ||= LayerClasses.new(self)
@@ -207,10 +223,55 @@ module Mapscript
 
   # MapObj extensions
   class MapObj
+    # Create MapObj from string
+    def self.from_s(map)
+      map_obj = nil
+      #msLoadMapFromString has no SWIG bindings
+      file = Tempfile.new(['mapobj', '.map'])
+      begin
+        file << map
+        file.close
+        map_obj = MapObj.new(file.path)
+      ensure
+        file.unlink
+      end
+      map_obj
+    end
+
     # Return LayerObj iterator
     def layers
       @map_layers ||= MapLayers.new(self)
     end
+
+    #Export map to string
+    def to_s
+      str = nil
+      file = Tempfile.new(['mapobj', '.map'])
+      begin
+        file.close
+        save(file.path)
+        str = File.open(file.path).read
+      ensure
+        file.unlink
+      end
+      str
+    end
+
+  end
+
+  # OutputFormatObj extensions
+  class OutputFormatObj
+    #Create OutputFormatObj from Mapfile fragment
+    def self.from_map(mapfragment)
+      mapfile =<<EOS
+MAP
+  #{mapfragment}
+END
+EOS
+      map = MapObj.from_s(mapfile)
+      map.outputformat
+    end
+
   end
 
   # ResultCacheObj extensions
