@@ -26,8 +26,7 @@ then, please check if you installed libmapscript-ruby, and if you have, the foll
 
 1. find where mapscript.so is hiding 
 
-  sudo updatedb
-  locate mapscript.so
+  sudo updatedb && locate mapscript.so
 
 2. it could be something like:
 
