@@ -18,27 +18,32 @@ To use the gem, add it to your Gemfile or install it manually::
 
   gem install ruby_mapscript
 
-When you try to use ruby_mapscript and you get an error like this:
+Trouble loading mapscript
+-------------------------
+
+
+If you get::
 
   cannot load such file -- mapscript (LoadError)
 
-then, please check if you installed libmapscript-ruby, and if you have, the following *might* solve the problem (on Debian/Ubuntu systems):
+when you run 'rake test' or try to use ruby_mapscript in a rails application, the following *might* solve the problem (on Debian/Ubuntu systems):
 
-1. find where mapscript.so is hiding 
+1. find where mapscript.so is hiding::
 
-  sudo updatedb && locate mapscript.so
+  sudo updatedb
+  locate mapscript.so
 
 2. it could be something like:
 
   /usr/lib/ruby/1.9.1/x86_64-linux/mapscript.so
 
-3. now, instead of 
+3. add the path, in this case:
 
-  require 'mapscript'
+  /usr/lib/ruby/1.9.1/x86_64-linux
 
-use
+to your config/environment.rb, for instance, like this:
 
-  require '/usr/lib/ruby/1.9.1/x86_64-linux/mapscript.so'
+  $: << '/usr/lib/ruby/1.9.1/x86_64-linux'
 
   
 
