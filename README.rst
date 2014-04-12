@@ -37,11 +37,7 @@ it could be something like::
 
   /usr/lib/ruby/1.9.1/x86_64-linux/mapscript.so
 
-add the path, in this case::
-
-  /usr/lib/ruby/1.9.1/x86_64-linux
-
-to your config/environment.rb, for instance, like this::
+add the path to your config/environment.rb, like this::
 
   $: << '/usr/lib/ruby/1.9.1/x86_64-linux'
 
@@ -52,7 +48,7 @@ or add it to your Rakefile, like this::
    t.libs << '/usr/lib/ruby/1.9.1/x86_64-linux' # this line added
   end
 
-  
+
 
 Usage
 -----
