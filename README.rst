@@ -28,22 +28,29 @@ If you get::
 
 when you run 'rake test' or try to use ruby_mapscript in a rails application, the following *might* solve the problem (on Debian/Ubuntu systems):
 
-1. find where mapscript.so is hiding::
+find where mapscript.so is hiding::
 
   sudo updatedb
   locate mapscript.so
 
-2. it could be something like:
+it could be something like::
 
   /usr/lib/ruby/1.9.1/x86_64-linux/mapscript.so
 
-3. add the path, in this case:
+add the path, in this case::
 
   /usr/lib/ruby/1.9.1/x86_64-linux
 
-to your config/environment.rb, for instance, like this:
+to your config/environment.rb, for instance, like this::
 
   $: << '/usr/lib/ruby/1.9.1/x86_64-linux'
+
+or add it to your Rakefile, like this::
+
+  Rake::TestTask.new do |t|
+   t.libs << 'test'
+   t.libs << '/usr/lib/ruby/1.9.1/x86_64-linux' # this line added
+  end
 
   
 
