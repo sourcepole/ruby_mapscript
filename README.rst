@@ -18,7 +18,6 @@ To use the gem, add it to your Gemfile or install it manually::
 
   gem install ruby_mapscript
 
-
 Usage
 -----
 
@@ -63,5 +62,33 @@ To include a WMS server in a Rails application, require "ruby_mapscript/mapserve
 
   match "/wms" => RubyMapscript::Mapserver.new('test.map')
 
+Trouble loading mapscript
+-------------------------
+
+If you get::
+
+  cannot load such file -- mapscript (LoadError)
+
+when you run 'rake test' or try to use ruby_mapscript in a rails application, the following *might* solve the problem (on Debian/Ubuntu systems):
+
+find where mapscript.so is hiding::
+
+  sudo updatedb
+  locate mapscript.so
+
+it could be something like::
+
+  /usr/lib/ruby/1.9.1/x86_64-linux/mapscript.so
+
+add the path to your config/environment.rb, like this::
+
+  $: << '/usr/lib/ruby/1.9.1/x86_64-linux'
+
+or add it to your Rakefile, like this::
+
+  Rake::TestTask.new do |t|
+   t.libs << 'test'
+   t.libs << '/usr/lib/ruby/1.9.1/x86_64-linux' # this line added
+  end
 
 *Copyright (c) 2012 Pirmin Kalberer, Sourcepole AG*
