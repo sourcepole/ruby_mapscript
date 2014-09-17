@@ -80,7 +80,7 @@ it could be something like::
 
   /usr/lib/ruby/1.9.1/x86_64-linux/mapscript.so
 
-add the path to your config/environment.rb, like this::
+add the path to the top of your config/boot.rb, like this::
 
   $: << '/usr/lib/ruby/1.9.1/x86_64-linux'
 
